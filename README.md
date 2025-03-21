@@ -65,3 +65,113 @@ tags = {
   subnet_id      =aws_subnet.pub_sub.id
   route_table_id =aws_route_table.public_rt.id 
 }</code>
+<h3>Nat Gateway</h3>
+<p>#Nat gateway for public subnet</p>
+<code>resource "aws_eip" "ib" {}
+resource "aws_nat_gateway" "gw_nat" {
+  allocation_id =aws_eip.ib.id
+  subnet_id     =aws_subnet.pub_sub.id
+ tags = {
+    Name = "gw NAT"
+  }
+  depends_on = [aws_internet_gateway.gw]
+}</code>
+<p>Note: To ensure proper ordering, it is recommended to add an explicit dependency on the Internet Gateway for the VPC.</p>
+<h3>Routable for private subnet</h3>
+<p>#Routable for private subnet</p>
+<code>resource "aws_route_table" "private_rt" {
+  vpc_id =aws_vpc.app_vpc.id
+  tags = {
+    Name = "PrivateRouteTable"
+  }
+}</code>
+<h3>Route for private subnet</h3>
+<p>#Route for private subnet</p>
+<code>resource "aws_route" "p" {
+  route_table_id            =aws_route_table.private_rt.id
+  destination_cidr_block    = "0.0.0.0/0"
+  nat_gateway_id =aws_nat_gateway.gw_nat.id
+}</code>
+<h3>Association of private route table to private subnet</h3>
+<p>##Association of private route table to private subnet</p>
+<code>
+resource "aws_route_table_association" "b" {
+  subnet_id      =aws_subnet.pri_sub.id
+  route_table_id =aws_route_table.private_rt.id
+}</code>
+<h3>Security Group</h3>
+<p>#Public Security Group</p>
+<code>resource "aws_security_group" "lucky_sg"{
+  vpc_id = aws_vpc.app_vpc.id
+  name="luckysg"
+  description = "Allow SSH, HTTP inbound traffic"
+  
+  ingress {
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    
+  }
+}
+</code>
+<h3>Private Security Group</h3>
+<p>#Private Security Group</p>
+<code>resource "aws_security_group" "okuna_sg"{
+  vpc_id = aws_vpc.app_vpc.id
+  name="okunasg"
+  description = "Allow SSH, HTTP inbound traffic"
+  
+  ingress {
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    cidr_blocks =  ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}</code>
+<h3>Aws instance in public subnet</h3>
+<p>#Aws instance in public subnet</p>
+<code>resource "aws_instance" "Demo" {
+  ami                     = "ami-0f2d00da2aafb6966"
+  instance_type           = "t2.micro"
+  subnet_id = aws_subnet.pub_sub.id
+  security_groups = [aws_security_group.lucky_sg.id]
+  tags = {
+    name: "App1"
+  }
+}</code>
+<h3>At the terminal level, run the following codes</h3>
+  <code>terraform init</code>
+  <code>terraform plan</code>
+  <code>terraform apply</code>
+  <p>terraform init: it initializes the terraform working directory, downloads the necessary provider plugins, and sets up the backend configuration.</p>
+  <p>terraform plan: it helps you understand what changes will be made to your infrastructure before applying them</p>
+  <p>terraform apply: it applies the changes required to reach the desired state of your infrastructure as defined in your Terraform configuration files.</p>
