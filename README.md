@@ -43,3 +43,25 @@ tags = {
     Name = "IGW"
   }
 }</code>
+<h3>Routable</h3>
+<p>#routable</p>
+<code>resource "aws_route_table" "public_rt" {
+  vpc_id =aws_vpc.app_vpc.id
+  tags = {
+    Name = "PublicRouteTable"
+  }
+}</code>
+<h3>Route for public subnet</h3>
+<p>#route for public subnet</p>
+<code>resource "aws_route" "r" {
+  route_table_id            =aws_route_table.public_rt.id
+  destination_cidr_block    = "0.0.0.0/0"
+  gateway_id =aws_internet_gateway.gw.id
+  }
+</code>
+<h3>Association of public subnet and public route</h3>
+<p>#Association of public subnet and public route</p>
+<code>resource "aws_route_table_association" "a" {
+  subnet_id      =aws_subnet.pub_sub.id
+  route_table_id =aws_route_table.public_rt.id 
+}</code>
