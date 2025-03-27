@@ -179,5 +179,6 @@ resource "aws_route_table_association" "b" {
 <p>this is what shows on the terminal affecting running the <code>terraform apply</code></p>
 <h3>Time to get into the aws console to see the vpc created</h3>
 <p>this image shows the vpc was successfully created</p>
-  <img src ="C:\Users\use\Downloads\IMG-20250319-WA0062.jpg">
+![Image](https://github.com/user-attachments/assets/a5349671-1d27-44be-ad7d-6d7643155758)
+
 
