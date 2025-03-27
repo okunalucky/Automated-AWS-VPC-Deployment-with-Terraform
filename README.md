@@ -175,9 +175,7 @@ resource "aws_route_table_association" "b" {
   <p>terraform init: it initializes the terraform working directory, downloads the necessary provider plugins, and sets up the backend configuration.</p>
   <p>terraform plan: it helps you understand what changes will be made to your infrastructure before applying them</p>
   <p>terraform apply: it applies the changes required to reach the desired state of your infrastructure as defined in your Terraform configuration files.</p>
-<figure>
-  <img src ="C:\Users\use\Downloads\IMG-20250319-WA0052.jpg">
-</figure>
+![Image](https://github.com/user-attachments/assets/1a0007a1-ed2e-40a6-ac4a-e4e92a833e38)
 <p>this is what shows on the terminal affecting running the <code>terraform apply</code></p>
 <h3>Time to get into the aws console to see the vpc created</h3>
 <p>this image shows the vpc was successfully created</p>
