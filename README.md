@@ -1,4 +1,4 @@
-<h1>Vpc Configuration Using Terraform</h1>
+<h1>Automated AWS VPC Deployment with Terraform</h1>
 <h2>Language used: Terraform</h2>
 
 <h2>First step is to configure the provider block</h2>
